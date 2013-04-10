@@ -1,0 +1,3 @@
+[submodule "avrora"]
+	path = avrora
+	url = git@github.com:PIlin/avrora_mirror.git
