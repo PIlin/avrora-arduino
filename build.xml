@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="arduino-avrora" default="compile">
+
+	<property name="source.dir" location="src"/>
+	<property name="build.dir" location="bin"/>
+	<property name="doc.dir" location="doc"/>
+	
+	<presetdef name="javac">
+		<javac includeantruntime="false" />
+	</presetdef>
+	
+	<target name="clean" description="remove intermediate files">
+        <delete dir="${build.dir}"/>
+    </target>
+    
+	<target name="clobber" depends="clean" description="remove all artifact files">
+        <delete file="${ant.project.name}.jar"/>
+		<delete file="${ant.project.name}-sources.jar"/>
+		<delete file="${ant.project.name}-javadoc.jar"/>
+		<delete dir ="${doc.dir}"/>
+    </target>
+    
+	<target name="compile" description="compile the Java source code to class files">
+        <mkdir dir="${build.dir}"/>
+        <javac srcdir="${source.dir}" destdir="${build.dir}"/>
+    </target>
+	
+    <target name="jar" depends="compile" description="create a Jar file for the application">
+        <jar destfile="${ant.project.name}.jar">
+            <fileset dir="${build.dir}" includes="**/*.class"/>
+        </jar>
+    </target>
+	
+	<target name="package-sources" description="bundle sources in a jar">
+	    <jar basedir="${source.dir}" destfile="${ant.project.name}-sources.jar"/>
+	</target>
+	
+	<target name="doc" description="generate documentation">
+		<mkdir dir="${doc.dir}"/>
+		<javadoc sourcepath="${source.dir}" destdir="${doc.dir}"/>
+	</target>
+	
+	<target name="package-doc" depends="doc" description="build javadoc jar" >
+	    <jar compress="true" destfile="${ant.project.name}-javadoc.jar" basedir="${doc.dir}" />
+	</target>
+	
+	<target name="jars" depends="jar, package-doc, package-sources" description="build all jar packages">
+	</target>
+</project>
