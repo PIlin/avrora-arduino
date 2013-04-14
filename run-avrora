@@ -1,4 +1,6 @@
 #!/bin/sh -x
 
-java -jar avrora/avrora.jar $@
+#java -jar avrora/avrora.jar $@
+
+java -cp "avrora/avrora.jar:bin" avrora.Main $@
 
