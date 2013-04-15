@@ -72,6 +72,9 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 	public static final int[] ATmega32u4Periods2 = { 0, 1, 8, 32, 64, 128, 256,
 			1024 };
 
+	protected FlagRegister TIFR0_reg;
+	protected MaskRegister TIMSK0_reg;
+
 	/**
 	 * The <code>props</code> field stores a static reference to a properties
 	 * object shared by all of the instances of this microcontroller. This
@@ -131,7 +134,7 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 		addPin(pinAssignments, 42, "AREF");
 		addPin(pinAssignments, 43, "GND");
 		addPin(pinAssignments, 44, "AVCC");
-		
+
 		// extended IO registers
 		// rl.addIOReg("reserved", 0xFF - 0x20);
 		// rl.addIOReg("reserved", 0xFE - 0x20);
@@ -293,8 +296,6 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 		// rl.addIOReg("reserved", 0x62 - 0x20);
 		rl.addIOReg("CLKPR", 0x61 - 0x20);
 		rl.addIOReg("WDTCSR", 0x60 - 0x20);
-
-
 
 		// lower 64 IO registers
 		rl.addIOReg("SREG", 0x3F);
@@ -460,27 +461,22 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 	}
 
 	protected void installDevices() {
-		// set up the external interrupt mask and flag registers and interrupt
-		// range
-		// int[] mapping = new int[] { -1, -1, -1, -1, -1, 4, 2, 3 };
-		// FlagRegister fr = new FlagRegister(interpreter, mapping);
-		// MaskRegister mr = new MaskRegister(interpreter, mapping);
-		// installIOReg("GICR", mr);
-		// installIOReg("GIFR", fr);
-		// EIFR_reg = fr;
-
 		// set up the timer mask and flag registers and interrupt range
-		// TIFR_reg = buildInterruptRange(false, "TIMSK", "TIFR", 12, 8);
-		// TIMSK_reg = (MaskRegister)getIOReg("TIMSK");
+		int[] mapping_t0 = new int[] { 24, 22, 23, -1, -1, -1, -1, -1 };
+		TIFR0_reg = buildInterrupt("TIMSK0", "TIFR0", mapping_t0);
+		TIMSK0_reg = (MaskRegister) getIOReg("TIMSK0");
 
-		// addDevice(new Timer0());
+		addDevice(new Timer0());
 		// addDevice(new Timer1(2));
 		// addDevice(new Timer2());
 
-		final boolean[] portc_mask = {false, false, false, false, false, false, true, true};
-		final boolean[] porte_mask = {false, false, true, false, false, false, true, false};
-		final boolean[] portf_mask = {true, true, false, false, true, true, true, true};
-		
+		final boolean[] portc_mask = { false, false, false, false, false,
+				false, true, true };
+		final boolean[] porte_mask = { false, false, true, false, false, false,
+				true, false };
+		final boolean[] portf_mask = { true, true, false, false, true, true,
+				true, true };
+
 		buildPort('B');
 		buildPort('C', portc_mask);
 		buildPort('D');
@@ -508,9 +504,9 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 	/**
 	 * <code>Timer0</code> is different from ATMega128
 	 */
-	protected class Timer0 extends Timer8Bit {
+	protected class Timer0 extends Timer8bit_32u4 {
 		protected Timer0() {
-			super(ATMega32u4.this, 0, 1, 0, 1, 0, ATmega32u4Periods0);
+			super(ATMega32u4.this, 0, 1, 2, 0, 1, 2, 0, ATmega32u4Periods0);
 		}
 	}
 
@@ -523,17 +519,25 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 		pinMap.put(n4, i);
 		pinMap.put(n5, i);
 	}
-	
+
 	protected void buildPort(char p, boolean[] pin_exist) {
 		Pin[] portPins = new Pin[8];
-		for (int cntr = 0; cntr < 8; cntr++)
-		{
+		for (int cntr = 0; cntr < 8; cntr++) {
 			if (pin_exist[cntr])
 				portPins[cntr] = (Pin) getPin("P" + p + cntr);
 		}
 		installIOReg("PORT" + p, new PortRegister(portPins));
 		installIOReg("DDR" + p, new DirectionRegister(portPins));
 		installIOReg("PIN" + p, new PinRegister(portPins));
+	}
+
+	protected FlagRegister buildInterrupt(String maskRegNum, String flagRegNum,
+			int[] mapping) {
+		FlagRegister fr = new FlagRegister(interpreter, mapping);
+		MaskRegister mr = new MaskRegister(interpreter, mapping);
+		installIOReg(maskRegNum, mr);
+		installIOReg(flagRegNum, fr);
+		return fr;
 	}
 
 }
