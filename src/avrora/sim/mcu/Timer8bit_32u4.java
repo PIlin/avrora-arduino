@@ -66,7 +66,7 @@ public abstract class Timer8bit_32u4 extends AtmelInternalDevice {
 	protected final int n; // number of timer. 0 for Timer0, 2 for Timer2
 
 	protected Simulator.Event ticker;
-	protected final Clock externalClock;
+	//protected final Clock externalClock;
 	protected Clock timerClock;
 
 	protected int period;
@@ -106,7 +106,7 @@ public abstract class Timer8bit_32u4 extends AtmelInternalDevice {
 		TIFRn_reg = (ATMegaFamilyNew.FlagRegister) m.getIOReg("TIFR" + n);
 		TIMSKn_reg = (ATMegaFamilyNew.MaskRegister) m.getIOReg("TIMSK" + n);
 
-		externalClock = m.getClock("external");
+		//externalClock = m.getClock("external");
 		timerClock = mainClock;
 
 		outputComparePinA = (AtmelMicrocontroller.Pin) microcontroller

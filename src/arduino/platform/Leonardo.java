@@ -22,7 +22,7 @@ import avrora.sim.platform.LED.LEDGroup;
  */
 public class Leonardo extends Platform {
 	
-	protected static final int MAIN_HZ = 8000000;
+	protected static final int MAIN_HZ = 16000000;
 	protected static final int EXT_HZ = 32768;
 	
 	public static class Factory implements PlatformFactory {
