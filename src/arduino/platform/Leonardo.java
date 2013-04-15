@@ -9,6 +9,7 @@ import avrora.sim.Simulation;
 import avrora.sim.Simulator;
 import avrora.sim.clock.ClockDomain;
 import avrora.sim.mcu.ATMega32;
+import avrora.sim.mcu.ATMega32u4;
 import avrora.sim.mcu.Microcontroller;
 import avrora.sim.platform.LED;
 import avrora.sim.platform.Platform;
@@ -31,7 +32,8 @@ public class Leonardo extends Platform {
 			ClockDomain cd = new ClockDomain(MAIN_HZ);
 			cd.newClock("external", EXT_HZ);
 			
-			return new Leonardo(new ATMega32(id, sim, cd, p));			
+			return new Leonardo(new ATMega32u4(id, sim, cd, p));
+//			return new Leonardo(new ATMega32(id, sim, cd, p));
 		}
 		
 	}
@@ -55,5 +57,6 @@ public class Leonardo extends Platform {
 		
 		
 	}
+
 
 }
