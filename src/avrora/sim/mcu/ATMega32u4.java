@@ -488,6 +488,8 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 
 		// addDevice(new SPI(this));
 		// addDevice(new ADC(this, 8));
+		
+		addDevice(new USB(this));
 	}
 
 	/*
