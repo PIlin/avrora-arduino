@@ -13,9 +13,6 @@ s.connect((TCP_IP, TCP_PORT))
 # s.send(MESSAGE)
 
 while True:
-  print('>>>>>>>>>>>>>>>>>')
-  s.send('0123456789')
-  print('<<<<<<<<<<<<<<<<<')
   data = s.recv(BUFFER_SIZE)
   if not data: break
   pprint(data)
