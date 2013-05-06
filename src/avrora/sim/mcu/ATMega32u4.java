@@ -387,7 +387,7 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 		addInterrupt(interruptAssignments, "TIMER0 COMPA", 22);
 		addInterrupt(interruptAssignments, "TIMER0 COMPB", 23);
 		addInterrupt(interruptAssignments, "TIMER0 OVF", 24);
-		addInterrupt(interruptAssignments, "SPI (STC)", 25);
+		addInterrupt(interruptAssignments, "SPI, STC", 25);
 		addInterrupt(interruptAssignments, "USART1, RX", 26);
 		addInterrupt(interruptAssignments, "USART1, UDRE", 27);
 		addInterrupt(interruptAssignments, "USART1, TX", 28);
@@ -492,6 +492,7 @@ public class ATMega32u4 extends ATMegaFamilyNew {
 		addDevice(new USB(this));
 		
 		addDevice(new USART("1", this));
+		addDevice(new SPI(this));
 	}
 
 	/*
