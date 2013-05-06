@@ -11,5 +11,10 @@ void setup() {
 }
 
 void loop() {
-	S.write(0x42);
+
+	while (S.available())
+	{
+		uint8_t d = S.read();
+		S.write(d);
+	}
 }
